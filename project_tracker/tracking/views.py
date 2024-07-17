@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Project, Commit
 from collections import defaultdict
 from django.utils.timezone import localtime
@@ -18,6 +18,7 @@ def project_detail(request, project_id):
 
     grouped_commits = defaultdict(list)
     daily_work_times = {}
+    total_estimated_hours = 0
     
     for commit in commits:
         commit_date = localtime(commit.commit_time).date()
@@ -36,11 +37,13 @@ def project_detail(request, project_id):
 
     for date, times in daily_work_times.items():
         times['daily_hours'] = (times['last_commit'] - times['first_commit']).total_seconds() / 3600
+        total_estimated_hours += times['daily_hours']
 
     context = {
         'project': project,
         'grouped_commits': sorted(grouped_commits.items()),
-        'daily_work_times': daily_work_times
+        'daily_work_times': daily_work_times,
+        'total_estimated_hours': total_estimated_hours
     }
     return render(request, 'tracking/project_detail.html', context)
 
