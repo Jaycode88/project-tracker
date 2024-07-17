@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ project.name }}</title>
+</head>
+
+<body>
+    <h1>{{ project.name }}</h1>
+    <h2>Commits</h2>
+    {% for date, commits in grouped_commits %}
+    <h3>{{ date }}</h3>
+
+    {% with times=daily_work_times|default_if_none:'' %}
+    {% if times %}
+    {% for commit_date, time_values in daily_work_times.items %}
+    {% if commit_date == date %}
+    <p><strong>Time of first commit:</strong> {{ time_values.first_commit|date:"P" }}</p>
+    <p><strong>Time of last commit:</strong> {{ time_values.last_commit|date:"P" }}</p>
+    <p><strong>Estimated daily hours:</strong> {{ time_values.daily_hours|floatformat:2 }}</p>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    <p>No commit times available</p>
+    {% endif %}
+    {% endwith %}
+
+    <ul>
+        {% for commit in commits %}
+        <li>
+            <p>{{ commit.commit_time|date:"P" }} - {{ commit.commit_message }}</p>
+            {% if commit.time_since_last_commit %}
+            <p>Time since last commit: {{ commit.time_since_last_commit }}</p>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+    <a href="{% url 'project_list' %}">Back to Projects</a>
+</body>
+
+</html>
