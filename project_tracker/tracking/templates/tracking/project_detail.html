@@ -18,7 +18,15 @@
         data-fetch-url="{% url 'fetch_commits' project.id %}">Fetch Data</button>
     <p id="fetch-status"></p>
 
-    <h2>Commits</h2>
+    <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" style="background-color:red;color:white;">Delete Project</button>
+    </form>
+
+    <a href="{% url 'project_list' %}">Back to Projects</a>
+
+    {% if grouped_commits %}
+    <h2>Commit Data</h2>
     {% for date, commits in grouped_commits %}
     <h3>{{ date }}</h3>
 
@@ -50,7 +58,12 @@
     <button id="fetch-commits" data-project-id="{{ project.id }}"
         data-fetch-url="{% url 'fetch_commits' project.id %}">Fetch Data</button>
     <p id="fetch-status"></p>
+    <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" style="background-color:red;color:white;">Delete Project</button>
+    </form>
     <a href="{% url 'project_list' %}">Back to Projects</a>
+    {% endif %}
 
 </body>
 

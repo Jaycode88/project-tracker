@@ -25,6 +25,7 @@ urlpatterns = [
     path('project/<int:project_id>/', views.project_detail, name='project_detail'),
     path('projects/<int:project_id>/fetch_commits/', views.fetch_commits, name='fetch_commits'),
     path('add_project/', views.project_list, name='add_project'),
+    path('projects/<int:project_id>/delete/', views.delete_project, name='delete_project'),
 ]
 
 
