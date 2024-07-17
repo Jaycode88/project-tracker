@@ -2,11 +2,12 @@
 <html>
 
 <head>
-    <title>Projects</title>
+    <title>Project Tracker</title>
 </head>
 
 <body>
-    <h1>Projects</h1>
+    <h1>Project Tracker</h1>
+    <h2>My Projects</h2>
     <ul>
         {% for project in projects %}
         <li><a href="{% url 'project_detail' project.id %}">{{ project.name }}</a></li>
