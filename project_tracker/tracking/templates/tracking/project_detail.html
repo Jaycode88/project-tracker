@@ -14,6 +14,10 @@
     <p><strong>Start Date:</strong> {{ project.start_date }}</p>
     <p><strong>Total Estimated Working Hours:</strong> {{ total_estimated_hours|floatformat:2 }}</p>
 
+    <button id="fetch-commits" data-project-id="{{ project.id }}"
+        data-fetch-url="{% url 'fetch_commits' project.id %}">Fetch Data</button>
+    <p id="fetch-status"></p>
+
     <h2>Commits</h2>
     {% for date, commits in grouped_commits %}
     <h3>{{ date }}</h3>
@@ -44,7 +48,7 @@
     </ul>
     {% endfor %}
     <button id="fetch-commits" data-project-id="{{ project.id }}"
-        data-fetch-url="{% url 'fetch_commits' project.id %}">Fetch Commits</button>
+        data-fetch-url="{% url 'fetch_commits' project.id %}">Fetch Data</button>
     <p id="fetch-status"></p>
     <a href="{% url 'project_list' %}">Back to Projects</a>
 

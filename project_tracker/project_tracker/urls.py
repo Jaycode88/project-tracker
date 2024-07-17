@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path
 from tracking import views
@@ -25,4 +26,5 @@ urlpatterns = [
     path('projects/<int:project_id>/fetch_commits/', views.fetch_commits, name='fetch_commits'),
     path('add_project/', views.project_list, name='add_project'),
 ]
+
 

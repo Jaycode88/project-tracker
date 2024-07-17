@@ -1,14 +1,14 @@
-// Fetch Commits
+// fetch_commits
 $(document).ready(function () {
     $('#fetch-commits').click(function () {
         var projectId = $(this).data('project-id');
         var fetchUrl = $(this).data('fetch-url');
-        var csrftoken = $('meta[name="csrf-token"]').attr('content');
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         $.ajax({
             url: fetchUrl,
             type: 'POST',
-            headers: { 'X-CSRFToken': csrftoken },
+            headers: { 'X-CSRFToken': csrfToken },
             success: function (response) {
                 if (response.status === 'success') {
                     $('#fetch-status').text(response.message).css('color', 'green');
