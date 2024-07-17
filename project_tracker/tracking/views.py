@@ -2,6 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from .models import Project, Commit
 from collections import defaultdict
 from django.utils.timezone import localtime
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.management import call_command
+from .models import Project
+
 
 def project_list(request):
     projects = Project.objects.all()
@@ -38,3 +43,15 @@ def project_detail(request, project_id):
         'daily_work_times': daily_work_times
     }
     return render(request, 'tracking/project_detail.html', context)
+
+
+@csrf_exempt
+def fetch_commits(request, project_id):
+    if request.method == 'POST':
+        try:
+            project = Project.objects.get(pk=project_id)
+            call_command('fetch_commits')
+            return JsonResponse({'status': 'success', 'message': f'Fetched commits for project {project.name}'})
+        except Project.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Project not found'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
