@@ -62,3 +62,11 @@ def fetch_commits(request, project_id):
         return JsonResponse({'status': 'success', 'message': f'Fetched commits for project {project_id}'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+def delete_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    if request.method == 'POST':
+        project.delete()
+        return redirect('project_list')
+    return render(request, 'tracking/project_confirm_delete.html', {'project': project})
