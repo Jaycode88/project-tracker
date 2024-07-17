@@ -14,12 +14,9 @@
     </ul>
 
     <h2>Add a New Project</h2>
-    <form id="add-project-form" method="post" action="{% url 'add_project' %}">
+    <form method="post">
         {% csrf_token %}
-        <label for="name">Project Name:</label>
-        <input type="text" id="name" name="name" required><br>
-        <label for="repository_url">Repository URL:</label>
-        <input type="url" id="repository_url" name="repository_url" required><br>
+        {{ form.as_p }}
         <button type="submit">Add Project</button>
     </form>
 
