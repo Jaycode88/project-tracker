@@ -4,32 +4,29 @@ from tracking.models import Project, Commit
 import git
 from datetime import datetime
 import os
+import pytz
 
 class Command(BaseCommand):
-    help = 'Fetch commits for a specific project'
+    help = 'Fetch commits from all projects'
 
     def add_arguments(self, parser):
-        parser.add_argument('project_id', type=int, help='ID of the project to fetch commits for')
+        parser.add_argument('project_id', type=int)
 
-    def handle(self, *args, **kwargs):
-        project_id = kwargs['project_id']
-        try:
-            project = Project.objects.get(id=project_id)
-        except Project.DoesNotExist:
-            self.stdout.write(self.style.ERROR(f'Project with id {project_id} does not exist'))
-            return
-
-        repo_path = f'/tmp/{project.name}'
+    def handle(self, *args, **options):
+        project_id = options['project_id']
+        project = Project.objects.get(pk=project_id)
+        repo_path = f'/tmp/{project.name}-{project.branch}'
         if not os.path.exists(repo_path):
-            repo = git.Repo.clone_from(project.repository_url, to_path=repo_path)
+            repo = git.Repo.clone_from(project.repository_url, to_path=repo_path, branch=project.branch)
         else:
             repo = git.Repo(repo_path)
+            repo.git.checkout(project.branch)
             repo.remote().pull()
 
         last_commit_time = None
         first_commit_time = None
         for commit in reversed(list(repo.iter_commits())):
-            commit_time = datetime.fromtimestamp(commit.committed_date)
+            commit_time = datetime.fromtimestamp(commit.committed_date, pytz.UTC)
             if not first_commit_time:
                 first_commit_time = commit_time
 
@@ -52,4 +49,4 @@ class Command(BaseCommand):
             project.start_date = first_commit_time.date()
             project.save()
 
-        self.stdout.write(self.style.SUCCESS(f'Successfully fetched commits for {project.name}'))
+        self.stdout.write(self.style.SUCCESS(f'Successfully fetched commits for {project.name} on branch {project.branch}'))

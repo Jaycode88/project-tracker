@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Project, Commit
+from .forms import ProjectForm
 from collections import defaultdict
 from django.utils.timezone import localtime
 from django.http import JsonResponse
@@ -10,12 +11,13 @@ from django.views.decorators.http import require_POST
 def project_list(request):
     projects = Project.objects.all()
     if request.method == 'POST':
-        name = request.POST.get('name')
-        repository_url = request.POST.get('repository_url')
-        if name and repository_url:
-            Project.objects.create(name=name, repository_url=repository_url)
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
             return redirect('project_list')
-    return render(request, 'tracking/project_list.html', {'projects': projects})
+    else:
+        form = ProjectForm()
+    return render(request, 'tracking/project_list.html', {'projects': projects, 'form': form})
 
 def project_detail(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
