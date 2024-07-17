@@ -12,6 +12,18 @@
         <li><a href="{% url 'project_detail' project.id %}">{{ project.name }}</a></li>
         {% endfor %}
     </ul>
+
+    <h2>Add a New Project</h2>
+    <form id="add-project-form" method="post" action="{% url 'add_project' %}">
+        {% csrf_token %}
+        <label for="name">Project Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="repository_url">Repository URL:</label>
+        <input type="url" id="repository_url" name="repository_url" required><br>
+        <button type="submit">Add Project</button>
+    </form>
+
+    <div id="add-project-status"></div>
 </body>
 
 </html>

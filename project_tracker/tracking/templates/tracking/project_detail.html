@@ -11,6 +11,9 @@
 
 <body>
     <h1>{{ project.name }}</h1>
+    <p><strong>Start Date:</strong> {{ project.start_date }}</p>
+    <p><strong>Total Estimated Working Hours:</strong> {{ total_estimated_hours|floatformat:2 }}</p>
+
     <h2>Commits</h2>
     {% for date, commits in grouped_commits %}
     <h3>{{ date }}</h3>
